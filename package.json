@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --port 4200 --ssl",
     "build": "ng build",
+    "build:gh-pages": "ng build --base-href /emily-english-app/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
