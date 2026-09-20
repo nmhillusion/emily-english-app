@@ -1,4 +1,5 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
+import { SwUpdate } from '@angular/service-worker';
 import { ProgressStore } from './core/services/progress.store';
 import { TtsService } from './core/services/tts.service';
 import { SettingsService } from './core/services/settings.service';
@@ -21,9 +22,17 @@ export class App {
   store = inject(ProgressStore);
   tts = inject(TtsService);
   settings = inject(SettingsService);
+  sw = inject(SwUpdate, { optional: true });
+  updateReady$ = signal(false);
   constructor() {
     // Never let an old reading bleed into the next round.
     effect(() => { this.store.stage(); this.tts.stop(); });
+    this.sw?.versionUpdates.subscribe((e) => {
+      if (e.type === 'VERSION_READY') this.updateReady$.set(true);
+    });
+  }
+  reload(): void {
+    document.location.reload();
   }
   stages = [
     { name: 'Chọn chủ đề', steps: '1–2' },

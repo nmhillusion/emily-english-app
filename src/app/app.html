@@ -11,6 +11,9 @@
   </div>
   <div class="raillbl"><span>{{ stages[store.stage()].name }}</span><span>Bước {{ stages[store.stage()].steps }}/9</span></div>
   <app-api-key-bar></app-api-key-bar>
+  @if (updateReady$()) {
+    <div class="bubble" role="status">Cô có bản mới nè! <button class="btn ghost" (click)="reload()">Tải lại</button></div>
+  }
   <main aria-live="polite">
   @switch (store.stage()) {
     @case (0) { <app-topic-picker></app-topic-picker> }
