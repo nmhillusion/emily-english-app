@@ -1,0 +1,140 @@
+:root{
+  color-scheme:light;
+  --paper:#F1EEFF;
+  --card:#FFFFFF;
+  --ink:#241C4A;
+  --ink-soft:#5B5480;
+  --line:#241C4A;
+  --sun:#FFC93C;
+  --berry:#FF5D8F;
+  --leaf:#2ECC9B;
+  --sky:#4DA3FF;
+  --grape:#A88BEB;
+  --shadow:#241C4A;
+  --chip:#FFFFFF;
+  --radius:22px;
+}
+/* Light theme only: no dark-mode override, the kid palette always applies. */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:17px;
+  line-height:1.55;
+  -webkit-text-size-adjust:100%;
+}
+h1,h2,h3,.display{font-family:"Baloo 2","Be Vietnam Pro",system-ui,sans-serif;font-weight:800;line-height:1.15;margin:0}
+.wrap{max-width:680px;margin:0 auto;padding:18px 16px 64px}
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.emily{
+  width:52px;height:52px;flex:none;border-radius:50%;
+  background:radial-gradient(circle at 50% 38%, var(--sun) 0 42%, var(--berry) 42% 100%);
+  border:3px solid var(--line);display:grid;place-items:center;font-size:26px;
+}
+.emily.talking{animation:bob .7s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-5px) rotate(2deg)}}
+@media (prefers-reduced-motion:reduce){.emily.talking{animation:none}.btn.mic.rec{animation:none}}
+.topbar h1{font-size:23px}
+.topbar p{margin:0;font-size:13px;color:var(--ink-soft)}
+.rail{display:flex;gap:5px;margin:0 0 18px}
+.rail i{
+  flex:1;height:9px;border-radius:99px;background:var(--chip);
+  border:2px solid var(--line);font-style:normal;
+}
+.rail i.done{background:var(--leaf)}
+.rail i.now{background:var(--sun)}
+.raillbl{font-size:12.5px;color:var(--ink-soft);margin:-12px 0 16px;display:flex;justify-content:space-between}
+.card{
+  background:var(--card);border:3px solid var(--line);border-radius:var(--radius);
+  padding:20px;margin-bottom:16px;box-shadow:5px 6px 0 var(--shadow);
+}
+.card.flat{box-shadow:none}
+.bubble{
+  background:var(--sun);border:3px solid var(--line);border-radius:20px 20px 20px 6px;
+  padding:13px 16px;margin-bottom:16px;color:#241C4A;font-weight:500;
+}
+.bubble b{font-weight:700}
+button{font:inherit;color:inherit;cursor:pointer}
+.btn{
+  border:3px solid var(--line);border-radius:16px;background:var(--card);
+  padding:12px 18px;font-weight:700;box-shadow:3px 4px 0 var(--shadow);
+  transition:transform .08s, box-shadow .08s;display:inline-flex;align-items:center;gap:8px;
+}
+.btn:hover{transform:translate(1px,1px);box-shadow:2px 3px 0 var(--shadow)}
+.btn:active{transform:translate(3px,4px);box-shadow:0 0 0 var(--shadow)}
+.btn:focus-visible{outline:4px solid var(--sky);outline-offset:3px}
+.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none;box-shadow:3px 4px 0 var(--shadow)}
+.btn.go{background:var(--leaf);color:#14243A}
+.btn.big{width:100%;justify-content:center;padding:16px;font-size:19px;font-family:"Baloo 2",sans-serif}
+.btn.mic{background:var(--berry);color:#42091D}
+.btn.mic.rec{background:#fff;color:#C2145B;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{box-shadow:3px 4px 0 var(--shadow)}50%{box-shadow:3px 4px 0 var(--berry)}}
+.btn.ghost{background:transparent;box-shadow:none;border-style:dashed;font-weight:500}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.chip{
+  border:3px solid var(--line);background:var(--chip);border-radius:99px;
+  padding:12px 18px;font-weight:600;font-size:16px;box-shadow:2px 3px 0 var(--shadow);
+  min-height:44px;
+}
+.chip[aria-pressed="true"]{background:var(--grape);color:#1B1240}
+input[type=text],input[type=password],select{
+  width:100%;font:inherit;font-size:18px;padding:14px 16px;border-radius:16px;
+  border:3px solid var(--line);background:var(--card);color:var(--ink);
+}
+input[type=text]:focus-visible,input[type=password]:focus-visible,select:focus-visible{outline:4px solid var(--sky);outline-offset:2px}
+.vocab{display:flex;align-items:center;gap:14px;padding:14px;border:3px solid var(--line);
+  border-radius:18px;background:var(--chip);margin-bottom:11px}
+.vocab .pic{font-size:38px;line-height:1;flex:none}
+.vocab .w{font-family:"Baloo 2",sans-serif;font-size:26px;font-weight:800}
+.vocab .ipa{color:var(--ink-soft);font-size:15px}
+.vocab .vi{font-weight:600}
+.bigword{font-family:"Baloo 2",sans-serif;font-size:44px;text-align:center;margin:6px 0 2px}
+.bigipa{text-align:center;color:var(--ink-soft);font-size:19px;margin-bottom:2px}
+.bigvi{text-align:center;font-weight:700;font-size:19px;margin-bottom:16px}
+.bigpic{text-align:center;font-size:64px;line-height:1}
+.story{
+  background:var(--chip);border:3px solid var(--line);border-radius:18px;padding:18px;
+}
+.story .en{font-size:19px;line-height:1.75;margin:0 0 12px}
+.story .vi{color:var(--ink-soft);margin:0;font-size:16px;line-height:1.7;
+  border-top:3px dashed var(--line);padding-top:12px}
+.sent{font-size:22px;font-family:"Baloo 2",sans-serif;line-height:1.5;margin-bottom:6px}
+.sentvi{color:var(--ink-soft);margin-bottom:10px}
+.note{background:var(--sky);color:#0B2140;border:3px solid var(--line);border-radius:14px;
+  padding:10px 13px;font-size:15px;font-weight:500;margin-bottom:14px}
+.fb{border:3px solid var(--line);border-radius:16px;padding:12px 14px;margin-top:14px;font-weight:500}
+.fb.good{background:var(--leaf);color:#0F2A22}
+.fb.ok{background:var(--sun);color:#3A2A00}
+.fb.retry{background:var(--berry);color:#42091D}
+.fb .heard{display:block;font-size:14px;font-weight:400;opacity:.95;margin-top:5px}
+.opt{
+  display:block;width:100%;text-align:left;border:3px solid var(--line);border-radius:16px;
+  background:var(--chip);padding:14px 16px;margin-bottom:10px;font-weight:600;
+  box-shadow:3px 4px 0 var(--shadow);
+}
+.opt:hover{transform:translate(1px,1px);box-shadow:2px 3px 0 var(--shadow)}
+.opt.right{background:var(--leaf);color:#0F2A22}
+.opt.wrong{background:var(--berry);color:#42091D}
+.opt[disabled]{cursor:default;transform:none}
+.qnum{font-size:14px;color:var(--ink-soft);margin-bottom:4px}
+.qtext{font-family:"Baloo 2",sans-serif;font-size:22px;margin-bottom:14px}
+.badge{text-align:center;padding:10px 0 4px}
+.badge .medal{font-size:76px;line-height:1}
+.badge .score{font-family:"Baloo 2",sans-serif;font-size:50px;margin:2px 0}
+.badge .name{display:inline-block;background:var(--sun);border:3px solid var(--line);
+  border-radius:99px;padding:7px 18px;font-weight:700;color:#3A2A00}
+.review{border-top:3px dashed var(--line);padding-top:14px;margin-top:14px}
+.review h4{margin:0 0 4px;font-size:16px;font-family:"Be Vietnam Pro",sans-serif}
+.review p{margin:0 0 14px;font-size:15px;color:var(--ink-soft)}
+.tick{font-weight:800}
+.loading{text-align:center;padding:30px 10px}
+.muted{color:var(--ink-soft);font-size:14.5px}
+.hide{display:none!important}
+@media (max-width:420px){
+  body{font-size:16px}
+  .btn.big{font-size:17px}
+  .bigword{font-size:36px}
+}

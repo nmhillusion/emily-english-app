@@ -1,0 +1,25 @@
+<div class="wrap">
+  <div class="topbar">
+    <div class="emily" [class.talking]="tts.talking()" aria-hidden="true">👩‍🏫</div>
+    <div>
+      <h1>Cô Emily</h1>
+      <p>Lớp tiếng Anh vui vẻ của {{ settings.kidOr() }}</p>
+    </div>
+  </div>
+  <div class="rail" aria-hidden="true">
+    @for (s of stages; track s.name; let i = $index) { <i [class]="railClass(i)"></i> }
+  </div>
+  <div class="raillbl"><span>{{ stages[store.stage()].name }}</span><span>Bước {{ stages[store.stage()].steps }}/9</span></div>
+  <app-api-key-bar></app-api-key-bar>
+  <main aria-live="polite">
+  @switch (store.stage()) {
+    @case (0) { <app-topic-picker></app-topic-picker> }
+    @case (1) { <app-vocab-intro></app-vocab-intro> }
+    @case (2) { <app-word-practice></app-word-practice> }
+    @case (3) { <app-story-view></app-story-view> }
+    @case (4) { <app-sentence-practice></app-sentence-practice> }
+    @case (5) { <app-quiz-step></app-quiz-step> }
+    @default { <app-result-view></app-result-view> }
+  }
+  </main>
+</div>
