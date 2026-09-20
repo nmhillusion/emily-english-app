@@ -14,19 +14,32 @@ import { TtsService } from '../../../core/services/tts.service';
   <div class="card flat">
   <label class="muted" for="kidName">Tên của em</label>
   <input id="kidName" type="text" [ngModel]="settings.getKidName()" (ngModelChange)="settings.setKidName($event)" placeholder="Ví dụ: Minh Anh" aria-label="Tên của em" style="margin-top:4px">
-  <input type="password" [(ngModel)]="draft" placeholder="Dán Gemini API key" aria-label="Gemini API key" style="margin-top:10px">
+  @if (!hasKey()) {
+    <div class="muted" style="margin-top:10px">Dùng key của bạn — miễn phí, key chỉ lưu trên máy này:
+      <br>1. Bấm <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> → Create API key
+      <br>2. Copy key, dán vào ô dưới
+      <br>3. Bấm Lưu key
+    </div>
+  }
+  <div class="row" style="margin-top:10px">
+    <input [type]="showKey$() ? 'text' : 'password'" [(ngModel)]="draft" placeholder="Dán Gemini API key của bạn" aria-label="Gemini API key" style="flex:1">
+    <button class="btn ghost" (click)="toggleShowKey()" [attr.aria-label]="showKey$() ? 'Ẩn key' : 'Hiện key'">{{ showKey$() ? '🙈' : '👁️' }}</button>
+  </div>
   @if (lessons.modelOptions$().length) {
     <select [(ngModel)]="modelDraft" (ngModelChange)="pickModel($event)" aria-label="Chọn model" style="margin-top:10px">
       @for (o of lessons.modelOptions$(); track o.id) { <option [value]="o.id">{{ o.displayName }} ({{ o.id }})</option> }
     </select>
   }
   <div class="row" style="margin-top:10px">
-    <button class="btn" (click)="save()">Lưu key</button>
+    <button class="btn" (click)="save()" [disabled]="!draft.trim()">Lưu key</button>
     @if (hasKey()) { <button class="btn ghost" (click)="reload()" [disabled]="lessons.modelsLoading$()">🔄 Tải danh sách model</button> }
+    @if (hasKey()) { <button class="btn ghost" (click)="remove()">Xóa key</button> }
   </div>
-  @if (lessons.modelsLoading$()) { <p class="muted">Cô đang tải danh sách model...</p> }
+  @if (lessons.modelsLoading$()) { <p class="muted">Cô đang kiểm tra key...</p> }
   @if (lessons.modelsError$()) { <p class="muted">{{ lessons.modelsError$() }}</p> }
-  @if (!hasKey()) { <p class="muted">Chưa có key — dán key để Cô soạn bài và chấm phát âm cho {{ settings.kidOr() }} nhé.</p> }
+  @if (saved$()) { <p class="muted">Đã lưu key — chúc {{ settings.kidOr() }} học vui nhé!</p> }
+  @if (!hasKey()) { <p class="muted">Chưa có key — dán key của bạn để Cô soạn bài và chấm phát âm cho {{ settings.kidOr() }} nhé.</p> }
+  @if (hasKey()) { <p class="muted">Đang dùng key của bạn, lưu trên máy này.</p> }
   <div style="margin-top:12px">
     <label class="muted" for="voiceEn">Giọng đọc tiếng Anh</label>
     <select id="voiceEn" [ngModel]="tts.getVoice('en')" (ngModelChange)="pickVoice('en', $event)" aria-label="Giọng đọc tiếng Anh" style="margin-top:4px">
@@ -56,13 +69,16 @@ export class ApiKeyBarComponent implements OnInit {
   draft = '';
   modelDraft = '';
   open = signal(false);
+  showKey$ = signal(false);
+  saved$ = signal(false);
   constructor() { this.modelDraft = this.settings.getModel(); }
   ngOnInit(): void {
     this.open.set(!this.hasKey());
     if (this.hasKey()) void this.lessons.listModels();
   }
   hasKey = () => this.settings.getKey().length > 0;
-  toggle(): void { this.open.update(v => !v); }
+  toggle(): void { this.open.update(v => !v); this.saved$.set(false); }
+  toggleShowKey(): void { this.showKey$.update(v => !v); }
   pickModel(m: string): void { this.modelDraft = m; this.settings.setModel(m); }
   pickVoice(lang: 'en' | 'vi', uri: string): void { this.tts.setVoice(lang, uri); }
   previewVoice(lang: 'en' | 'vi'): void {
@@ -70,10 +86,26 @@ export class ApiKeyBarComponent implements OnInit {
     this.tts.speak(lang === 'en' ? 'Hello! I am Teacher Emily.' : `Xin chào ${kid}! Cô là Cô Emily đây.`, { lang, rate: 0.9 });
   }
   save(): void {
+    if (!this.draft.trim()) return;
+    this.saved$.set(false);
     this.settings.setKey(this.draft);
     this.settings.setModel(this.modelDraft);
     this.draft = '';
-    if (this.hasKey()) void this.lessons.listModels(true);
+    if (this.hasKey()) {
+      void this.lessons.listModels(true).then(() => {
+        if (!this.lessons.modelsError$()) {
+          this.saved$.set(true);
+          this.open.set(false);
+        }
+      });
+    }
+  }
+  remove(): void {
+    this.settings.clearKey();
+    this.lessons.modelOptions$.set([]);
+    this.saved$.set(false);
+    this.draft = '';
+    this.open.set(true);
   }
   reload(): void { void this.lessons.listModels(true); }
   reloadVoices(): void { this.tts.reloadVoices(); }
