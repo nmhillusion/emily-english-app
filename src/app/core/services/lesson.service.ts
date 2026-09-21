@@ -50,8 +50,8 @@ export class LessonService {
     const addr = kid ? ` Học sinh tên là "${kid}" — gọi em bằng tên, không dùng từ "bé".` : '';
     const lines = ['Bạn là Cô Emily, gia sư tiếng Anh cho học sinh tiểu học Việt Nam (6–11 tuổi).' + addr,
       `Hãy soạn một bài học tiếng Anh cho chủ đề: "${topic}".`,
-      'Chỉ trả về JSON đúng cấu trúc {topic_emoji, vocab[3]{word,phonetics,meaning,emoji,tip}, story{title,full_english,full_vietnamese,english[],vietnamese[],notes[]}, quiz[5]{question,options[3],correct,hint,explanation}}.',
-      'Quy tắc: vocab đúng 3 từ cơ bản; tip là 1 câu tiếng Việt dưới 20 từ hướng dẫn học sinh cách đặt miệng/lưỡi để đọc đúng từ đó; story 3-5 câu đơn giản thì hiện tại; english/vietnamese/notes có số phần tử bằng nhau; mỗi notes gồm 3 phần súc tích cho trẻ: nghĩa tiếng Việt của cả câu, 1 điểm cấu trúc mini, 1 mẹo đọc lưu loát cụ thể (nối âm/nhấn từ nào/ngắt nghỉ ở đâu); quiz đúng 5 câu mỗi câu 3 lựa chọn; giọng dịu dàng của cô giáo gọi học sinh bằng tên; mọi từ/cụm tiếng Anh trong notes/question/hint/explanation luôn đặt trong dấu nháy đơn \'...\'.',
+      'Chỉ trả về JSON đúng cấu trúc {topic_emoji, vocab[3]{word,phonetics,meaning,emoji,tip}, story{title,full_english,full_vietnamese,english[],vietnamese[],notes[]}, quiz[5]{question,options[3],correct,hint,explanation,aboutStory}}.',
+      'Quy tắc: vocab đúng 3 từ cơ bản; tip là 1 câu tiếng Việt dưới 20 từ hướng dẫn học sinh cách đặt miệng/lưỡi để đọc đúng từ đó; story 3-5 câu đơn giản thì hiện tại; english/vietnamese/notes có số phần tử bằng nhau; mỗi notes gồm 3 phần súc tích cho trẻ: nghĩa tiếng Việt của cả câu, 1 điểm cấu trúc mini, 1 mẹo đọc lưu loát cụ thể (nối âm/nhấn từ nào/ngắt nghỉ ở đâu); quiz đúng 5 câu mỗi câu 3 lựa chọn gồm 2 câu từ vựng (aboutStory=false) và 3 câu về câu chuyện (aboutStory=true); giọng dịu dàng của cô giáo gọi học sinh bằng tên; mọi từ/cụm tiếng Anh trong notes/question/hint/explanation luôn đặt trong dấu nháy đơn \'...\'.',
       `Quan trọng: mỗi lần soạn bài PHẢI chọn 3 từ vựng KHÁC với các lần trước cho cùng chủ đề, sao cho ${kid || 'bé'} học được từ mới mỗi buổi.`];
     const ban = avoid.map(w => String(w).trim()).filter(Boolean).slice(-12);
     if (ban.length) lines.push(`Tránh dùng lại các từ sau (${kid || 'bé'} đã học rồi): ${ban.join(', ')}.`);
@@ -75,7 +75,8 @@ export class LessonService {
         .slice(0, 5).map((q: any) => ({ question: String(q.question),
           options: [String(q.options[0]), String(q.options[1]), String(q.options[2])] as [string,string,string],
           correct: (q.correct === 0 || q.correct === 1 || q.correct === 2) ? q.correct : 0,
-          hint: String(q.hint ?? 'Đọc kỹ lại câu chuyện một lần nữa nhé!'), explanation: String(q.explanation ?? '') }));
+          hint: String(q.hint ?? 'Đọc kỹ lại câu chuyện một lần nữa nhé!'), explanation: String(q.explanation ?? ''),
+          aboutStory: q.aboutStory === true }));
       if (quiz.length < 3) return null;
       return { topic_emoji: String(raw.topic_emoji ?? '✨'), vocab: v as Lesson['vocab'],
         story: { title: String(raw.story?.title ?? topic),

@@ -14,6 +14,24 @@ describe('LessonService.normalize', () => {
     expect(lesson?.vocab.length).toBe(3);
     expect(lesson?.vocab[0].tip).toContain('miệng');
   });
+  it('preserves aboutStory flags', () => {
+    const s = TestBed.configureTestingModule({}).inject(LessonService);
+    const raw = JSON.parse(JSON.stringify({ ...FALLBACK_LESSON }));
+    const lesson = s.normalizeLesson(raw, 'Vật nuôi');
+    expect(lesson?.quiz.filter(q => q.aboutStory).length).toBe(3);
+    expect(lesson?.quiz.filter(q => !q.aboutStory).length).toBe(2);
+  });
+  it('defaults missing aboutStory to false', () => {
+    const s = TestBed.configureTestingModule({}).inject(LessonService);
+    const raw = JSON.parse(JSON.stringify({ ...FALLBACK_LESSON }));
+    delete raw.quiz[1].aboutStory;
+    const lesson = s.normalizeLesson(raw, 'Vật nuôi');
+    expect(lesson?.quiz[1].aboutStory).toBe(false);
+  });
+  it('asks AI to flag story questions', () => {
+    const s = TestBed.configureTestingModule({}).inject(LessonService);
+    expect(s.buildPrompt('Pets')).toContain('aboutStory');
+  });
   it('keeps vocab tips and defaults missing tip to empty', () => {
     const s = TestBed.configureTestingModule({}).inject(LessonService);
     const raw = JSON.parse(JSON.stringify({ ...FALLBACK_LESSON }));

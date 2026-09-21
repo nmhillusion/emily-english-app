@@ -17,10 +17,10 @@ export const FALLBACK_LESSON: Lesson = {
       'Cả câu nghĩa là "Hôm nay, chúng nhìn thấy một chú thỏ nhỏ đang trốn gần những bông hoa". "They see" nghĩa là "chúng nhìn thấy". Khi đọc, ngắt nghỉ nhẹ sau "Today," rồi đọc phần còn lại liền mạch nhé.']
   },
   quiz: [
-    { question: "Từ nào trong tiếng Anh có nghĩa là 'Con chó'?", options: ['Cat', 'Dog', 'Rabbit'], correct: 1, hint: 'Bé nhớ lại từ đầu tiên cô dạy nhé!', explanation: "'Dog' nghĩa là con chó. 'Cat' là con mèo còn 'Rabbit' là con thỏ bé nhé!" },
-    { question: 'Chú chó trong câu chuyện tên là gì?', options: ['Max', 'Tom', 'Bob'], correct: 0, hint: 'Cô có nhắc tên bạn ấy ngay ở câu đầu tiên đó!', explanation: 'Câu đầu tiên nói "a cute dog named Max" — chú chó tên là Max bé nhé!' },
-    { question: "'Cat' nghĩa là con gì?", options: ['Con thỏ', 'Con mèo', 'Con chó'], correct: 1, hint: 'Bạn ấy kêu "meo meo" đó bé!', explanation: "'Cat' là con mèo. Con thỏ là 'Rabbit' nha bé." },
-    { question: 'Hai bạn chó và mèo chơi với nhau ở đâu?', options: ['Trong vườn', 'Trên biển', 'Ở trường'], correct: 0, hint: 'Nơi đó có nhiều bông hoa xinh lắm!', explanation: '"in the garden" nghĩa là "trong vườn" bé nhé.' },
-    { question: 'Cuối truyện, các bạn nhìn thấy con gì?', options: ['Một chú chim', 'Một chú thỏ nhỏ', 'Một chú cá'], correct: 1, hint: 'Bạn ấy có đôi tai dài và đang trốn gần bông hoa!', explanation: '"a small rabbit" nghĩa là "một chú thỏ nhỏ" đó bé.' }
+    { question: "Từ nào trong tiếng Anh có nghĩa là 'Con chó'?", options: ['Cat', 'Dog', 'Rabbit'], correct: 1, hint: 'Bé nhớ lại từ đầu tiên cô dạy nhé!', explanation: "'Dog' nghĩa là con chó. 'Cat' là con mèo còn 'Rabbit' là con thỏ bé nhé!", aboutStory: false },
+    { question: 'Chú chó trong câu chuyện tên là gì?', options: ['Max', 'Tom', 'Bob'], correct: 0, hint: 'Cô có nhắc tên bạn ấy ngay ở câu đầu tiên đó!', explanation: 'Câu đầu tiên nói "a cute dog named Max" — chú chó tên là Max bé nhé!', aboutStory: true },
+    { question: "'Cat' nghĩa là con gì?", options: ['Con thỏ', 'Con mèo', 'Con chó'], correct: 1, hint: 'Bạn ấy kêu "meo meo" đó bé!', explanation: "'Cat' là con mèo. Con thỏ là 'Rabbit' nha bé.", aboutStory: false },
+    { question: 'Hai bạn chó và mèo chơi với nhau ở đâu?', options: ['Trong vườn', 'Trên biển', 'Ở trường'], correct: 0, hint: 'Nơi đó có nhiều bông hoa xinh lắm!', explanation: '"in the garden" nghĩa là "trong vườn" bé nhé.', aboutStory: true },
+    { question: 'Cuối truyện, các bạn nhìn thấy con gì?', options: ['Một chú chim', 'Một chú thỏ nhỏ', 'Một chú cá'], correct: 1, hint: 'Bạn ấy có đôi tai dài và đang trốn gần bông hoa!', explanation: '"a small rabbit" nghĩa là "một chú thỏ nhỏ" đó bé.', aboutStory: true }
   ]
 };

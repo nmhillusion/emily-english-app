@@ -9,6 +9,9 @@ import { TtsService } from '../../../core/services/tts.service';
     @if (lesson.quiz[store.qIdx()]; as q) {
       <div class="bubble">{{ settings.kidOr() }} giỏi lắm! Giờ là phần <b>đố vui</b> 🧩 Suy nghĩ kỹ rồi chọn nhé.</div>
       <div class="row" style="margin-bottom:10px"><button class="btn ghost" (click)="guide()">🔊 Cô hướng dẫn lại</button></div>
+      @if (q.aboutStory) {
+        <details class="card" style="margin-bottom:10px" [open]="storyOpen()" (toggle)="storyOpen.set($any($event.target).open)"><summary>📖 Xem lại câu chuyện</summary><div class="story"><p class="en">{{ lesson.story.full_english }}</p><p class="vi">{{ lesson.story.full_vietnamese }}</p></div><div class="row" style="margin-top:10px"><button class="btn ghost" (click)="hearStory()">🔊 Nghe lại truyện</button></div></details>
+      }
       <div class="card">
       <div class="qnum">Câu {{ store.qIdx() + 1 }} / {{ lesson.quiz.length }}</div>
       <div class="qtext">{{ q.question }}</div>
@@ -29,13 +32,18 @@ export class QuizStepComponent {
   msg = signal('');
   fbCls = signal<'good' | 'ok' | 'retry'>('ok');
   locked = signal(false);
+  storyOpen = signal(false);
   picked: number | null = null;
   constructor() {
-    effect(() => { this.store.qIdx(); this.store.lesson(); this.guide(); });
+    effect(() => { this.store.qIdx(); this.store.lesson(); this.storyOpen.set(false); this.guide(); });
   }
   guide(): void {
     const q = this.store.lesson()?.quiz[this.store.qIdx()];
     if (q) this.tts.speakViMixed(q.question);
+  }
+  hearStory(): void {
+    const s = this.store.lesson()?.story.full_english;
+    if (s) this.tts.speak(s, { lang: 'en', rate: 0.9 });
   }
   optCls(i: number, correct: number): string {
     if (!this.locked() || this.picked === null) return '';
@@ -50,6 +58,7 @@ export class QuizStepComponent {
   hint(): void {
     const q = this.store.lesson()?.quiz[this.store.qIdx()];
     if (!q) return;
+    if (q.aboutStory) this.storyOpen.set(true);
     this.msg.set(`💡 ${q.hint}`);
     this.fbCls.set('ok');
     this.tts.speakViMixed(q.hint);
@@ -71,6 +80,7 @@ export class QuizStepComponent {
   }
   next(): void {
     this.locked.set(false);
+    this.storyOpen.set(false);
     this.picked = null;
     this.fbCls.set('ok');
     this.msg.set('');

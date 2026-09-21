@@ -5,4 +5,8 @@ describe('fallback lesson', () => {
     expect(FALLBACK_LESSON.quiz.length).toBe(5);
     expect(FALLBACK_LESSON.story.english.length).toBe(3);
   });
+  it('flags story vs vocab questions', () => {
+    expect(FALLBACK_LESSON.quiz.filter(q => q.aboutStory).length).toBe(3);
+    expect(FALLBACK_LESSON.quiz.filter(q => !q.aboutStory).length).toBe(2);
+  });
 });
