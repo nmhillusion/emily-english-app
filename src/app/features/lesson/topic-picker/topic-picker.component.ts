@@ -1,5 +1,6 @@
 import { Component, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ProgressStore } from '../../../core/services/progress.store';
 import { LessonService } from '../../../core/services/lesson.service';
 import { SettingsService } from '../../../core/services/settings.service';
@@ -33,6 +34,7 @@ const TOPICS: [string, string][] = [
 export class TopicPickerComponent {
   private store = inject(ProgressStore);
   private lessons = inject(LessonService);
+  private router = inject(Router);
   private tts = inject(TtsService);
   settings = inject(SettingsService);
   topics = TOPICS;
@@ -68,6 +70,7 @@ export class TopicPickerComponent {
       this.store.lesson.set(lesson);
       this.store.wordIdx.set(0);
       this.store.go(1);
+      void this.router.navigate(['/learn/vocab']);
     } catch (e) {
       const code = e instanceof Error ? e.message : '';
       this.error.set(code === 'no-key'

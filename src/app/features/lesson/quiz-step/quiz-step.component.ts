@@ -1,4 +1,5 @@
 import { Component, effect, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { ProgressStore } from '../../../core/services/progress.store';
 import { SettingsService } from '../../../core/services/settings.service';
 import { TtsService } from '../../../core/services/tts.service';
@@ -27,6 +28,7 @@ import { TtsService } from '../../../core/services/tts.service';
 })
 export class QuizStepComponent {
   store = inject(ProgressStore);
+  private router = inject(Router);
   private tts = inject(TtsService);
   settings = inject(SettingsService);
   msg = signal('');
@@ -84,7 +86,7 @@ export class QuizStepComponent {
     this.picked = null;
     this.fbCls.set('ok');
     this.msg.set('');
-    if (this.isLast()) this.store.go(6);
+    if (this.isLast()) { this.store.go(6); void this.router.navigate(['/result']); }
     else this.store.qIdx.update(v => v + 1);
   }
 }

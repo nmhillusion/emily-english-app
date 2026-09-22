@@ -1,4 +1,5 @@
 import { Component, effect, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { ProgressStore } from '../../../core/services/progress.store';
 import { TtsService } from '../../../core/services/tts.service';
 import { MicService } from '../../../core/services/mic.service';
@@ -36,6 +37,7 @@ import { SettingsService } from '../../../core/services/settings.service';
 })
 export class SentencePracticeComponent {
   store = inject(ProgressStore);
+  private router = inject(Router);
   private tts = inject(TtsService);
   private mic = inject(MicService);
   pron = inject(PronunciationService);
@@ -123,12 +125,12 @@ export class SentencePracticeComponent {
   back(): void {
     this.feedback.set('');
     if (this.store.sentIdx() > 0) this.store.sentIdx.update(v => v - 1);
-    else this.store.go(3);
+    else { this.store.go(3); void this.router.navigate(['/learn/story']); }
   }
   next(): void {
     this.feedback.set('');
     const len = this.store.lesson()?.story.english.length ?? 1;
-    if (this.store.sentIdx() >= len - 1) { this.store.qIdx.set(0); this.store.answers.set([]); this.store.go(5); }
+    if (this.store.sentIdx() >= len - 1) { this.store.qIdx.set(0); this.store.answers.set([]); this.store.go(5); void this.router.navigate(['/learn/quiz']); }
     else this.store.sentIdx.update(v => v + 1);
   }
 }

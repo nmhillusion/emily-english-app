@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { ProgressStore } from '../../../core/services/progress.store';
 import { SettingsService } from '../../../core/services/settings.service';
 import { TtsService } from '../../../core/services/tts.service';
@@ -19,6 +20,7 @@ import { TtsService } from '../../../core/services/tts.service';
 })
 export class VocabIntroComponent {
   store = inject(ProgressStore);
+  private router = inject(Router);
   private tts = inject(TtsService);
   settings = inject(SettingsService);
   constructor() { this.guide(); }
@@ -34,5 +36,5 @@ export class VocabIntroComponent {
     };
     chain(0);
   }
-  next(): void { this.store.wordIdx.set(0); this.store.go(2); }
+  next(): void { this.store.wordIdx.set(0); this.store.go(2); void this.router.navigate(['/learn/words']); }
 }

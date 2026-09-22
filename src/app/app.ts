@@ -1,19 +1,14 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter } from 'rxjs';
 import { SwUpdate } from '@angular/service-worker';
 import { ProgressStore } from './core/services/progress.store';
 import { TtsService } from './core/services/tts.service';
 import { SettingsService } from './core/services/settings.service';
 import { ApiKeyBarComponent } from './features/lesson/api-key-bar/api-key-bar.component';
-import { TopicPickerComponent } from './features/lesson/topic-picker/topic-picker.component';
-import { VocabIntroComponent } from './features/lesson/vocab-intro/vocab-intro.component';
-import { WordPracticeComponent } from './features/lesson/word-practice/word-practice.component';
-import { StoryViewComponent } from './features/lesson/story-view/story-view.component';
-import { SentencePracticeComponent } from './features/lesson/sentence-practice/sentence-practice.component';
-import { QuizStepComponent } from './features/lesson/quiz-step/quiz-step.component';
-import { ResultViewComponent } from './features/lesson/result-view/result-view.component';
 
 @Component({
-  imports: [ApiKeyBarComponent, TopicPickerComponent, VocabIntroComponent, WordPracticeComponent, StoryViewComponent, SentencePracticeComponent, QuizStepComponent, ResultViewComponent],
+  imports: [RouterOutlet, ApiKeyBarComponent],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',
@@ -23,10 +18,17 @@ export class App {
   tts = inject(TtsService);
   settings = inject(SettingsService);
   sw = inject(SwUpdate, { optional: true });
+  private router = inject(Router);
   updateReady$ = signal(false);
+  routePath$ = signal<string>(this.router.url || '/welcome');
   constructor() {
-    // Never let an old reading bleed into the next round.
-    effect(() => { this.store.stage(); this.tts.stop(); });
+    this.router.events
+      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .subscribe((e) => {
+        this.routePath$.set(e.urlAfterRedirects);
+        this.tts.stop();
+        window.scrollTo({ top: 0 });
+      });
     this.sw?.versionUpdates.subscribe((e) => {
       if (e.type === 'VERSION_READY') this.updateReady$.set(true);
     });
@@ -43,9 +45,20 @@ export class App {
     { name: 'Đố vui', steps: '7–8' },
     { name: 'Tổng kết', steps: '9' }
   ];
+  railIndexFromUrl(url: string): number {
+    const path = url.split('?')[0];
+    if (path.startsWith('/result')) return 6;
+    if (path.startsWith('/learn/quiz')) return 5;
+    if (path.startsWith('/learn/sentences')) return 4;
+    if (path.startsWith('/learn/story')) return 3;
+    if (path.startsWith('/learn/words')) return 2;
+    if (path.startsWith('/learn')) return 1;
+    return 0;
+  }
   railClass(i: number): string {
-    if (i < this.store.stage()) return 'done';
-    if (i === this.store.stage()) return 'now';
+    const cur = this.railIndexFromUrl(this.routePath$());
+    if (i < cur) return 'done';
+    if (i === cur) return 'now';
     return '';
   }
 }

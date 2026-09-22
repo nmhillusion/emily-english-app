@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { ProgressStore } from '../../../core/services/progress.store';
 import { SettingsService } from '../../../core/services/settings.service';
 import { TtsService } from '../../../core/services/tts.service';
@@ -31,6 +32,7 @@ import { TutorService } from '../../../core/services/tutor.service';
 })
 export class ResultViewComponent {
   store = inject(ProgressStore);
+  private router = inject(Router);
   private tts = inject(TtsService);
   private tutor = inject(TutorService);
   settings = inject(SettingsService);
@@ -86,6 +88,6 @@ export class ResultViewComponent {
   isOk(i: number): boolean {
     return this.store.answers()[i] === this.store.lesson()?.quiz[i].correct;
   }
-  retry(): void { this.store.answers.set([]); this.store.qIdx.set(0); this.store.go(5); }
-  newTopic(): void { this.store.lesson.set(null); this.store.answers.set([]); this.store.go(0); }
+  retry(): void { this.store.answers.set([]); this.store.qIdx.set(0); this.store.go(5); void this.router.navigate(['/learn/quiz']); }
+  newTopic(): void { this.store.lesson.set(null); this.store.answers.set([]); this.store.go(0); void this.router.navigate(['/start']); }
 }
